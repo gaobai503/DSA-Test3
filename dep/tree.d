@@ -1,1 +1,1 @@
-obj/tree.o: src/tree.c inc/tree.h
+obj/tree.o: src/tree.c inc/link.h inc/tree.h

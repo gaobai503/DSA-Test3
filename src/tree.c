@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "link.h"
 #include "tree.h"
 
 const elemtype EmptyElem = 0;
@@ -30,7 +31,7 @@ elemtype Data(btree bt){
     return bt->node;
 }
 
-btree BtreeInit(){
+btree EmptyBtree(){
     btree bt = (btree)malloc(sizeof(struct BTREE));
     if(!bt){
 	printf("No enough memory! Return Illegal btree\n");
@@ -54,6 +55,43 @@ btree BtreeCreate(elemtype data, btree lchild, btree rchild){
     return bt;
 }
 
+btree PreCreBtree(elemtype *dataset, unsigned n){
+    stack S = MakeNullStack();
+    Elem bt = {EmptyBtree(), 0};
+    Elem temp = {EmptyBtree(), 0};
+    for(int i=0; i<n; i++){
+	if(!ElemCom(dataset[i], EmptyElem)){
+	    bt = Pop(S);
+	    if(!bt.flag){
+		bt.flag=1;
+		Push(S, bt);
+	    }
+	    else{
+		while(Topelement(S).flag && !EmptyStack(S)){
+		    temp = Pop(S);
+		    temp.bt->rchild = bt.bt;
+		    bt = temp;
+		}
+		if(!EmptyStack(S)){
+		    temp = Pop(S);
+		    temp.bt->lchild = bt.bt;
+		    temp.flag = 1;
+		    Push(S, temp);
+		}
+	    }
+	}
+	else{
+	    bt.bt = BtreeCreate(dataset[i], EmptyBtree(), EmptyBtree());
+	    bt.flag = 0;
+	    Push(S, bt);
+	}
+	if(EmptyStack(S) && (i!=n-1)){
+	    return EmptyBtree();
+	}
+    }
+    return bt.bt;
+}
+
 btree Lchild(btree bt){
     if(!bt){
 	printf("btree given is illegal!\n");
@@ -69,3 +107,28 @@ btree Rchild(btree bt){
     }
     return bt->rchild;
 }
+
+void PreOrder(btree bt, void (*visit)(btree)){
+    if(!IsEmpty(bt)){
+	visit(bt);
+	PreOrder(Lchild(bt), visit);
+	PreOrder(Rchild(bt), visit);
+    }
+}
+
+void InOrder(btree bt, void (*visit)(btree)){
+    if(!IsEmpty(bt)){
+	InOrder(Lchild(bt), visit);
+	visit(bt);
+	InOrder(Rchild(bt), visit);
+    }
+}
+
+void PostOrder(btree bt, void (*visit)(btree)){
+    if(!IsEmpty(bt)){
+	PostOrder(Lchild(bt), visit);
+	PostOrder(Rchild(bt), visit);
+	visit(bt);
+    }
+}
+

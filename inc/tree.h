@@ -19,11 +19,14 @@ int IsEmpty(btree bt);
 
 elemtype Data(btree bt);
 
-btree BtreeInit();
+btree EmptyBtree();
 btree BtreeCreate(elemtype data, btree lchild, btree rchild);
+btree PreCreBtree(elemtype *dataset, unsigned n);
 btree Lchild(btree bt);
 btree Rchild(btree bt);
 
-
+void PreOrder(btree bt, void visit(btree));
+void InOrder(btree bt, void (*visit)(btree));
+void PostOrder(btree bt, void (*visit)(btree));
 
 #endif //!TREE_H
