@@ -26,7 +26,10 @@ btree Lchild(btree bt);
 btree Rchild(btree bt);
 
 void PreOrder(btree bt, void visit(btree));
+void PreOrderRec(btree bt, void (*visit)(btree));
 void InOrder(btree bt, void (*visit)(btree));
+void InOrderRec(btree bt, void (*visit)(btree));
 void PostOrder(btree bt, void (*visit)(btree));
+void PostOrderRec(btree bt, void (*visit)(btree));
 
 #endif //!TREE_H

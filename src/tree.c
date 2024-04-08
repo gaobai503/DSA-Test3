@@ -108,26 +108,138 @@ btree Rchild(btree bt){
     return bt->rchild;
 }
 
-void PreOrder(btree bt, void (*visit)(btree)){
+void PreOrderRec(btree bt, void (*visit)(btree)){
     if(!IsEmpty(bt)){
 	visit(bt);
-	PreOrder(Lchild(bt), visit);
-	PreOrder(Rchild(bt), visit);
+	PreOrderRec(Lchild(bt), visit);
+	PreOrderRec(Rchild(bt), visit);
+    }
+}
+
+void PreOrder(btree bt, void (*visit)(btree)){
+    if(!bt){
+	printf("btree given is illegal!\n");
+	return;
+    }
+    stack S = MakeNullStack();
+    visit(bt);
+    Elem temp = {bt, 0};
+    Push(S, temp);
+    while(!EmptyStack(S)){
+	if(!Topelement(S).flag){
+	    temp = Pop(S);
+	    temp.flag = 1;
+	    Push(S, temp);
+	    if(!IsEmpty(Lchild(Topelement(S).bt))){
+		visit(Lchild(Topelement(S).bt));
+		temp.bt = Lchild(Topelement(S).bt);
+		temp.flag = 0;
+		Push(S, temp);
+	    }
+	}
+	else if(!IsEmpty(Rchild(Topelement(S).bt))){
+	    visit(Rchild(Topelement(S).bt));
+	    temp.bt = Rchild(Topelement(S).bt);
+	    temp.flag = 0;
+	    Pop(S);
+	    Push(S, temp);
+	}
+	else {
+	    Pop(S);
+	}
     }
 }
 
 void InOrder(btree bt, void (*visit)(btree)){
+    if(!bt){
+	printf("btree given is illegal!\n");
+	return;
+    }
+    stack S = MakeNullStack();
+    Elem temp = {bt, 0};
+    Push(S, temp);
+    while(!EmptyStack(S)){
+	if(!Topelement(S).flag){
+	    if(!IsEmpty(Lchild(Topelement(S).bt))){
+		temp = Pop(S);
+		temp.flag = 1;
+		Push(S, temp);
+		temp.bt = Lchild(Topelement(S).bt);
+		temp.flag = 0;
+		Push(S, temp);
+	    }
+	    else{
+		visit(Topelement(S).bt);
+		if(!IsEmpty(Rchild(Topelement(S).bt))){
+		    temp.bt = Rchild(Topelement(S).bt);
+		    temp.flag = 0;
+		    Pop(S);
+		    Push(S, temp);
+		}
+		else Pop(S);
+	    }
+	}
+	else{
+	    visit(Topelement(S).bt);
+	    if(!IsEmpty(Rchild(Topelement(S).bt))){
+		temp.bt = Rchild(Topelement(S).bt);
+		temp.flag = 0;
+		Pop(S);
+		Push(S, temp);
+	    }
+	    else Pop(S);
+	}
+    }
+}
+
+void InOrderRec(btree bt, void (*visit)(btree)){
     if(!IsEmpty(bt)){
-	InOrder(Lchild(bt), visit);
+	InOrderRec(Lchild(bt), visit);
 	visit(bt);
-	InOrder(Rchild(bt), visit);
+	InOrderRec(Rchild(bt), visit);
     }
 }
 
 void PostOrder(btree bt, void (*visit)(btree)){
+    if(!bt){
+	printf("the btree given is illegal\n");
+	return;
+    }
+    Elem temp = {bt, 0};
+    stack S = MakeNullStack();
+    Push(S, temp);
+    while(!EmptyStack(S)){
+	if(Topelement(S).flag<1){
+	    temp = Pop(S);
+	    temp.flag = 1;
+	    Push(S, temp);
+	    if(!IsEmpty(Lchild(Topelement(S).bt))){
+		temp.bt = Lchild(Topelement(S).bt);
+		temp.flag = 0;
+		Push(S, temp);
+	    }
+	}
+	else if(Topelement(S).flag<2){
+	    temp = Pop(S);
+	    temp.flag = 2;
+	    Push(S, temp);
+	    if(!IsEmpty(Rchild(Topelement(S).bt))){
+		temp.bt = Rchild(Topelement(S).bt);
+		temp.flag = 0;
+		Push(S, temp);
+	    }
+	}
+	else{
+	    visit(Topelement(S).bt);
+	    Pop(S);
+	}
+    }
+}
+
+void PostOrderRec(btree bt, void (*visit)(btree)){
     if(!IsEmpty(bt)){
-	PostOrder(Lchild(bt), visit);
-	PostOrder(Rchild(bt), visit);
+	PostOrderRec(Lchild(bt), visit);
+	PostOrderRec(Rchild(bt), visit);
 	visit(bt);
     }
 }
