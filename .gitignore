@@ -1,3 +1,6 @@
 ./dep
 ./obj
 ./bin
+./dep/*
+./obj/*
+./bin/*
