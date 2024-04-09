@@ -23,6 +23,55 @@ int IsEmpty(btree bt){
     return 0;
 }
 
+unsigned BtreeWidth(btree bt){
+    Elem temp = {bt, 1};
+    unsigned record_height = 1;
+    unsigned counter = 0;
+    unsigned width = 0;
+    queue Q = MakeNullQueue();
+    EnQueue(temp, Q);
+    while(!EmptyQueue(Q)){
+	if(!IsEmpty(Front(Q).bt)){
+	    temp.bt = Lchild(Front(Q).bt);
+	    temp.flag = Front(Q).flag+1;
+	    EnQueue(temp, Q);
+	    temp.bt = Rchild(Front(Q).bt);
+	    temp.flag = Front(Q).flag+1;
+	    EnQueue(temp, Q);
+	    if(Front(Q).flag!=record_height){
+		record_height = Front(Q).flag;
+		if(counter > width) width = counter;
+		counter = 0;
+	    }
+	    counter++;
+	}
+	DeQueue(Q);
+    }
+    return width>counter?width:counter;
+}
+
+int IsComTree(btree bt){
+    if(!bt){
+	printf("btree given is illegal!\n");
+	return -1;
+    }
+    Elem temp = {bt, 0};
+    queue Q = MakeNullQueue();
+    EnQueue(temp, Q);
+    while(!IsEmpty(Front(Q).bt) && !EmptyQueue(Q)){
+	temp.bt = Lchild(Front(Q).bt);
+	EnQueue(temp, Q);
+	temp.bt = Rchild(Front(Q).bt);
+	EnQueue(temp, Q);
+	DeQueue(Q);
+    }
+    while(!EmptyQueue(Q)){
+	if(!IsEmpty(Front(Q).bt)) return 0;
+	DeQueue(Q);
+    }
+    return 1;
+}
+
 elemtype Data(btree bt){
     if(!bt){
 	printf("btree given is illegal!\n");

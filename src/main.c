@@ -22,8 +22,10 @@ void StoreData(btree bt, stack S){
 }
 
 int main(int argc, char* argv[]){
-    elemtype dataset[21] = {1,2,4,6,0,0,7,0,0,5,8,0,0,0,3,9,0,0,10,0,0};
-    btree bt = PreCreBtree(dataset, 21);
+    elemtype dataset[7] = {1,2,0,0,3,0,0};
+    btree bt = PreCreBtree(dataset, 7);
+    printf("Complete Tree?: %d\n", IsComTree(bt));
+    printf("Width: %d\n", BtreeWidth(bt));
     stack S1 = MakeNullStack();
     stack S2 = MakeNullStack();
     PostOrderRec(bt, S1, PrintData);

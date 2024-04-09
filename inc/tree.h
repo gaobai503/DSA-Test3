@@ -21,6 +21,9 @@ typedef struct BTREE *btree;
 int ElemCom(elemtype a, elemtype b);
 
 int IsEmpty(btree bt);
+int IsComTree(btree bt);
+
+unsigned BtreeWidth(btree bt);
 
 elemtype Data(btree bt);
 
