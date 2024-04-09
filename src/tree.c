@@ -108,139 +108,139 @@ btree Rchild(btree bt){
     return bt->rchild;
 }
 
-void PreOrderRec(btree bt, void (*visit)(btree)){
+void PreOrderRec(btree bt, stack S, void visit(btree, stack)){
     if(!IsEmpty(bt)){
-	visit(bt);
-	PreOrderRec(Lchild(bt), visit);
-	PreOrderRec(Rchild(bt), visit);
+	visit(bt, S);
+	PreOrderRec(Lchild(bt), S, visit);
+	PreOrderRec(Rchild(bt), S, visit);
     }
 }
 
-void PreOrder(btree bt, void (*visit)(btree)){
+void PreOrder(btree bt, stack S, void visit(btree, stack)){
     if(!bt){
 	printf("btree given is illegal!\n");
 	return;
     }
-    stack S = MakeNullStack();
-    visit(bt);
+    stack Stemp = MakeNullStack();
+    visit(bt, S);
     Elem temp = {bt, 0};
-    Push(S, temp);
-    while(!EmptyStack(S)){
-	if(!Topelement(S).flag){
-	    temp = Pop(S);
+    Push(Stemp, temp);
+    while(!EmptyStack(Stemp)){
+	if(!Topelement(Stemp).flag){
+	    temp = Pop(Stemp);
 	    temp.flag = 1;
-	    Push(S, temp);
-	    if(!IsEmpty(Lchild(Topelement(S).bt))){
-		visit(Lchild(Topelement(S).bt));
-		temp.bt = Lchild(Topelement(S).bt);
+	    Push(Stemp, temp);
+	    if(!IsEmpty(Lchild(Topelement(Stemp).bt))){
+		visit(Lchild(Topelement(Stemp).bt), S);
+		temp.bt = Lchild(Topelement(Stemp).bt);
 		temp.flag = 0;
-		Push(S, temp);
+		Push(Stemp, temp);
 	    }
 	}
-	else if(!IsEmpty(Rchild(Topelement(S).bt))){
-	    visit(Rchild(Topelement(S).bt));
-	    temp.bt = Rchild(Topelement(S).bt);
+	else if(!IsEmpty(Rchild(Topelement(Stemp).bt))){
+	    visit(Rchild(Topelement(Stemp).bt), S);
+	    temp.bt = Rchild(Topelement(Stemp).bt);
 	    temp.flag = 0;
-	    Pop(S);
-	    Push(S, temp);
+	    Pop(Stemp);
+	    Push(Stemp, temp);
 	}
 	else {
-	    Pop(S);
+	    Pop(Stemp);
 	}
     }
 }
 
-void InOrder(btree bt, void (*visit)(btree)){
+void InOrder(btree bt, stack S, void visit(btree, stack)){
     if(!bt){
 	printf("btree given is illegal!\n");
 	return;
     }
-    stack S = MakeNullStack();
+    stack Stemp = MakeNullStack();
     Elem temp = {bt, 0};
-    Push(S, temp);
-    while(!EmptyStack(S)){
-	if(!Topelement(S).flag){
-	    if(!IsEmpty(Lchild(Topelement(S).bt))){
-		temp = Pop(S);
+    Push(Stemp, temp);
+    while(!EmptyStack(Stemp)){
+	if(!Topelement(Stemp).flag){
+	    if(!IsEmpty(Lchild(Topelement(Stemp).bt))){
+		temp = Pop(Stemp);
 		temp.flag = 1;
-		Push(S, temp);
-		temp.bt = Lchild(Topelement(S).bt);
+		Push(Stemp, temp);
+		temp.bt = Lchild(Topelement(Stemp).bt);
 		temp.flag = 0;
-		Push(S, temp);
+		Push(Stemp, temp);
 	    }
 	    else{
-		visit(Topelement(S).bt);
-		if(!IsEmpty(Rchild(Topelement(S).bt))){
-		    temp.bt = Rchild(Topelement(S).bt);
+		visit(Topelement(Stemp).bt, S);
+		if(!IsEmpty(Rchild(Topelement(Stemp).bt))){
+		    temp.bt = Rchild(Topelement(Stemp).bt);
 		    temp.flag = 0;
-		    Pop(S);
-		    Push(S, temp);
+		    Pop(Stemp);
+		    Push(Stemp, temp);
 		}
-		else Pop(S);
+		else Pop(Stemp);
 	    }
 	}
 	else{
-	    visit(Topelement(S).bt);
-	    if(!IsEmpty(Rchild(Topelement(S).bt))){
-		temp.bt = Rchild(Topelement(S).bt);
+	    visit(Topelement(Stemp).bt, S);
+	    if(!IsEmpty(Rchild(Topelement(Stemp).bt))){
+		temp.bt = Rchild(Topelement(Stemp).bt);
 		temp.flag = 0;
-		Pop(S);
-		Push(S, temp);
+		Pop(Stemp);
+		Push(Stemp, temp);
 	    }
-	    else Pop(S);
+	    else Pop(Stemp);
 	}
     }
 }
 
-void InOrderRec(btree bt, void (*visit)(btree)){
+void InOrderRec(btree bt, stack S, void visit(btree, stack)){
     if(!IsEmpty(bt)){
-	InOrderRec(Lchild(bt), visit);
-	visit(bt);
-	InOrderRec(Rchild(bt), visit);
+	InOrderRec(Lchild(bt), S, visit);
+	visit(bt, S);
+	InOrderRec(Rchild(bt), S, visit);
     }
 }
 
-void PostOrder(btree bt, void (*visit)(btree)){
+void PostOrder(btree bt, stack S, void visit(btree, stack)){
     if(!bt){
 	printf("the btree given is illegal\n");
 	return;
     }
     Elem temp = {bt, 0};
-    stack S = MakeNullStack();
-    Push(S, temp);
-    while(!EmptyStack(S)){
-	if(Topelement(S).flag<1){
-	    temp = Pop(S);
+    stack Stemp = MakeNullStack();
+    Push(Stemp, temp);
+    while(!EmptyStack(Stemp)){
+	if(Topelement(Stemp).flag<1){
+	    temp = Pop(Stemp);
 	    temp.flag = 1;
-	    Push(S, temp);
-	    if(!IsEmpty(Lchild(Topelement(S).bt))){
-		temp.bt = Lchild(Topelement(S).bt);
+	    Push(Stemp, temp);
+	    if(!IsEmpty(Lchild(Topelement(Stemp).bt))){
+		temp.bt = Lchild(Topelement(Stemp).bt);
 		temp.flag = 0;
-		Push(S, temp);
+		Push(Stemp, temp);
 	    }
 	}
-	else if(Topelement(S).flag<2){
-	    temp = Pop(S);
+	else if(Topelement(Stemp).flag<2){
+	    temp = Pop(Stemp);
 	    temp.flag = 2;
-	    Push(S, temp);
-	    if(!IsEmpty(Rchild(Topelement(S).bt))){
-		temp.bt = Rchild(Topelement(S).bt);
+	    Push(Stemp, temp);
+	    if(!IsEmpty(Rchild(Topelement(Stemp).bt))){
+		temp.bt = Rchild(Topelement(Stemp).bt);
 		temp.flag = 0;
-		Push(S, temp);
+		Push(Stemp, temp);
 	    }
 	}
 	else{
-	    visit(Topelement(S).bt);
-	    Pop(S);
+	    visit(Topelement(Stemp).bt, S);
+	    Pop(Stemp);
 	}
     }
 }
 
-void PostOrderRec(btree bt, void (*visit)(btree)){
+void PostOrderRec(btree bt, stack S, void visit(btree, stack)){
     if(!IsEmpty(bt)){
-	PostOrderRec(Lchild(bt), visit);
-	PostOrderRec(Rchild(bt), visit);
-	visit(bt);
+	PostOrderRec(Lchild(bt), S, visit);
+	PostOrderRec(Rchild(bt), S, visit);
+	visit(bt, S);
     }
 }
 

@@ -4,6 +4,7 @@
 
 #include "tree.h"
 
+typedef struct BTREE *btree;
 typedef struct{
     btree bt;
     int flag;

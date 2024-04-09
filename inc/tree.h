@@ -2,6 +2,11 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include "link.h"
+
+typedef struct LINK *link;
+typedef link stack;
+
 typedef int elemtype; 
 extern const elemtype EmptyElem;
 extern const elemtype ErrorElem;
@@ -25,11 +30,11 @@ btree PreCreBtree(elemtype *dataset, unsigned n);
 btree Lchild(btree bt);
 btree Rchild(btree bt);
 
-void PreOrder(btree bt, void visit(btree));
-void PreOrderRec(btree bt, void (*visit)(btree));
-void InOrder(btree bt, void (*visit)(btree));
-void InOrderRec(btree bt, void (*visit)(btree));
-void PostOrder(btree bt, void (*visit)(btree));
-void PostOrderRec(btree bt, void (*visit)(btree));
+void PreOrder(btree bt, stack S, void visit(btree, stack));
+void PreOrderRec(btree bt, stack S, void (*visit)(btree, stack));
+void InOrder(btree bt, stack S, void (*visit)(btree, stack));
+void InOrderRec(btree bt, stack S, void (*visit)(btree, stack));
+void PostOrder(btree bt, stack S, void (*visit)(btree, stack));
+void PostOrderRec(btree bt, stack S, void (*visit)(btree, stack));
 
 #endif //!TREE_H
