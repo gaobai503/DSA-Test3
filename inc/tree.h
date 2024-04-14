@@ -39,5 +39,6 @@ void InOrder(btree bt, stack S, void (*visit)(btree, stack));
 void InOrderRec(btree bt, stack S, void (*visit)(btree, stack));
 void PostOrder(btree bt, stack S, void (*visit)(btree, stack));
 void PostOrderRec(btree bt, stack S, void (*visit)(btree, stack));
+void LevelOrder(btree bt, stack S, void (*visit)(btree, stack));
 
 #endif //!TREE_H

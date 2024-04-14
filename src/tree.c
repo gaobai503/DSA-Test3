@@ -210,12 +210,17 @@ void InOrder(btree bt, stack S, void visit(btree, stack)){
     while(!EmptyStack(Stemp)){
 	if(!Topelement(Stemp).flag){
 	    if(!IsEmpty(Lchild(Topelement(Stemp).bt))){
+
+		/**/
 		temp = Pop(Stemp);
 		temp.flag = 1;
 		Push(Stemp, temp);
+
+		/**/
 		temp.bt = Lchild(Topelement(Stemp).bt);
 		temp.flag = 0;
 		Push(Stemp, temp);
+
 	    }
 	    else{
 		visit(Topelement(Stemp).bt, S);
@@ -259,9 +264,11 @@ void PostOrder(btree bt, stack S, void visit(btree, stack)){
     Push(Stemp, temp);
     while(!EmptyStack(Stemp)){
 	if(Topelement(Stemp).flag<1){
+
 	    temp = Pop(Stemp);
 	    temp.flag = 1;
 	    Push(Stemp, temp);
+
 	    if(!IsEmpty(Lchild(Topelement(Stemp).bt))){
 		temp.bt = Lchild(Topelement(Stemp).bt);
 		temp.flag = 0;
@@ -269,9 +276,11 @@ void PostOrder(btree bt, stack S, void visit(btree, stack)){
 	    }
 	}
 	else if(Topelement(Stemp).flag<2){
+
 	    temp = Pop(Stemp);
 	    temp.flag = 2;
 	    Push(Stemp, temp);
+
 	    if(!IsEmpty(Rchild(Topelement(Stemp).bt))){
 		temp.bt = Rchild(Topelement(Stemp).bt);
 		temp.flag = 0;
@@ -293,3 +302,28 @@ void PostOrderRec(btree bt, stack S, void visit(btree, stack)){
     }
 }
 
+void LevelOrder(btree bt, stack S, void visit(btree, stack)){
+    if(!bt){
+	printf("The binary tree given is illegal!\n");
+	return;
+    }
+    queue Q = MakeNullQueue();
+    Elem Tagtree = {bt, 0};
+    Elem temp;
+    temp.flag = 0;
+    EnQueue(Tagtree, Q);
+    while(!EmptyQueue(Q)){
+	Tagtree = Front(Q);
+	visit(Tagtree.bt, S);
+	DeQueue(Q);
+	if(!IsEmpty(Lchild(Tagtree.bt))){
+	    temp.bt = Lchild(Tagtree.bt);
+	    EnQueue(temp, Q);
+	}
+	if(!IsEmpty(Rchild(Tagtree.bt))){
+	    temp.bt = Rchild(Tagtree.bt);
+	    EnQueue(temp, Q);
+	}
+    }
+    return;
+}
